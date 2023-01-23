@@ -1,5 +1,7 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from category.models import Category
+from decimal import Decimal
 
 
 class Product(models.Model):
@@ -21,7 +23,10 @@ class Variation(models.Model):
     name = models.CharField(max_length=255)
     sku = models.CharField(max_length=64)
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, help_text="Price in USD"
+        max_digits=10,
+        decimal_places=2,
+        help_text="Price in USD",
+        validators=[MinValueValidator(Decimal("0.00"))],
     )
     image = models.ImageField(upload_to="productImage/", null=True, blank=True)
     quantity = models.PositiveIntegerField(default=0)
