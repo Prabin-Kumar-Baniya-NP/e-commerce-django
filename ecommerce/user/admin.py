@@ -13,7 +13,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         ("date_of_birth", "gender"),
         ("email", "is_email_verified"),
         ("phone_number", "is_phone_number_verified"),
-        ("photo"),
+        ("image"),
         ("is_active"),
         ("is_staff"),
         ("is_superuser"),

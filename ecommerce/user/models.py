@@ -33,9 +33,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=30, blank=True)
-    middle_name = models.CharField(max_length=30, null=True, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    first_name = models.CharField(max_length=32, blank=True)
+    middle_name = models.CharField(max_length=32, null=True, blank=True)
+    last_name = models.CharField(max_length=32, blank=True)
     date_of_birth = models.DateField(
         help_text="Format: Year-Month-Day", null=True, blank=True
     )
@@ -46,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_email_verified = models.BooleanField(default=False)
     phone_number = PhoneNumberField(null=True, blank=True)
     is_phone_number_verified = models.BooleanField(default=False)
-    photo = models.ImageField(upload_to="profileImage/", null=True, blank=True)
+    image = models.ImageField(upload_to="profileImage/", null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
