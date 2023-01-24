@@ -29,7 +29,7 @@ class Variation(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     image = models.ImageField(upload_to="productImage/", null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
