@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "category.apps.CategoryConfig",
     "product.apps.ProductConfig",
     "inventory.apps.InventoryConfig",
-    "discount.apps.DiscountConfig",
+    "campaign.apps.CampaignConfig",
     "cart.apps.CartConfig",
     "order.apps.OrderConfig",
     "payment.apps.PaymentConfig",
