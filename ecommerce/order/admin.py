@@ -8,6 +8,7 @@ class OrderItemInline(admin.TabularInline):
 
 
 class CustomOrderAdmin(admin.ModelAdmin):
+    list_filter = ["status"]
     inlines = [OrderItemInline]
 
 

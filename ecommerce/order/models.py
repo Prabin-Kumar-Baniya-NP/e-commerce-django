@@ -7,8 +7,6 @@ User = get_user_model()
 
 ORDER_STATUS = (
     ("PP", "Payment Pending"),
-    ("PF", "Payment Failed"),
-    ("PR", "Payment Refunded"),
     ("PF", "Payment Fulfilled"),
     ("OP", "Order Placed"),
     ("AP", "Order Approved"),
@@ -19,7 +17,7 @@ ORDER_STATUS = (
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name="user_order")
+    user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name="order")
     status = models.CharField(max_length=2, choices=ORDER_STATUS, default="PP")
     shipping_address = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
