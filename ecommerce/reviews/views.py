@@ -33,14 +33,6 @@ class ReviewsDetail(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class UserReviewsList(generics.ListAPIView):
-    serializer_class = ReviewsReadSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Reviews.objects.filter(user=self.request.user)
-
-
 class ReviewsCreate(generics.CreateAPIView):
     queryset = Reviews.objects.all()
     serializer_class = ReviewsWriteSerializer
@@ -56,3 +48,19 @@ class ReviewsUpdate(generics.UpdateAPIView):
 class ReviewsDestroy(generics.DestroyAPIView):
     queryset = Reviews.objects.all()
     permission_classes = [IsAuthenticated, HasObjectOwnership]
+
+
+class UserReviewsList(generics.ListAPIView):
+    serializer_class = ReviewsReadSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user)
+
+
+class UserReviewsDetail(generics.RetrieveAPIView):
+    serializer_class = ReviewsReadSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user)
