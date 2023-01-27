@@ -91,3 +91,8 @@ class Address(models.Model):
     country = models.CharField(max_length=64)
     postal_code = models.CharField(max_length=12)
     is_default = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    modified_on = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.get_full_name() + " | " + self.type
