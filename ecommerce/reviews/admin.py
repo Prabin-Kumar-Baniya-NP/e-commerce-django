@@ -1,5 +1,5 @@
 from django.contrib import admin
-from reviews.models import Review
+from reviews.models import Reviews
 
 
 class CustomReviewAdmin(admin.ModelAdmin):
@@ -12,12 +12,6 @@ class CustomReviewAdmin(admin.ModelAdmin):
         "user__middle_name",
         "user__last_name",
     ]
-    readonly_fields = [
-        "user",
-        "product",
-        "rating",
-        "comment",
-    ]
 
 
-admin.site.register(Review, CustomReviewAdmin)
+admin.site.register(Reviews, CustomReviewAdmin)

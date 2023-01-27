@@ -6,14 +6,17 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 User = get_user_model()
 
 
-class Review(models.Model):
+class Reviews(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="customer", verbose_name="Customer"
+        User,
+        on_delete=models.CASCADE,
+        related_name="user_reviews",
+        verbose_name="Customer",
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name="product",
+        related_name="product_reviews",
         verbose_name="Product",
     )
     rating = models.IntegerField(
@@ -27,3 +30,8 @@ class Review(models.Model):
 
     def __str__(self):
         return self.product.name + " | " + self.user.get_full_name()
+
+    class Meta:
+        unique_together = ["user", "product"]
+        verbose_name = "Reviews"
+        verbose_name_plural = "Reviews"

@@ -9,19 +9,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("inventory", "0001_initial"),
+        ("order", "0001_initial"),
         ("product", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="inventory",
-            name="product_varient",
-            field=models.OneToOneField(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="product_inventory",
+            model_name="orderitem",
+            name="product",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.RESTRICT,
+                related_name="order_item",
                 to="product.productvariant",
-                verbose_name="Product Varient",
             ),
         ),
     ]
