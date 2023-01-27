@@ -38,7 +38,7 @@ def create_address(request):
     """
     Create a new address for authenticated user
     """
-    serializer = AddressSerializer(data=request.data)
+    serializer = AddressSerializer(data=request.data, context={"user": request.user})
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data, status=status.HTTP_201_CREATED)
