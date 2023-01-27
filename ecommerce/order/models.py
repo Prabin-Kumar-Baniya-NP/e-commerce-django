@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from product.models import Variation
+from product.models import ProductVariant
 from campaign.models import Campaign
 
 User = get_user_model()
@@ -30,7 +30,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name="order")
     product = models.ForeignKey(
-        Variation, on_delete=models.RESTRICT, related_name="order_item"
+        ProductVariant, on_delete=models.RESTRICT, related_name="order_item"
     )
     quantity = models.PositiveIntegerField()
     campaign = models.ForeignKey(

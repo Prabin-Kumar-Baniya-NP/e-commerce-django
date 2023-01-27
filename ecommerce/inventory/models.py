@@ -1,10 +1,13 @@
 from django.db import models
-from product.models import Variation
+from product.models import ProductVariant
 
 
 class Inventory(models.Model):
     product_varient = models.OneToOneField(
-        Variation, on_delete=models.CASCADE, verbose_name="Product Varient"
+        ProductVariant,
+        on_delete=models.CASCADE,
+        verbose_name="Product Varient",
+        related_name="product_inventory",
     )
     available = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)

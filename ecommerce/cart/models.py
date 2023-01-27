@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from product.models import Variation
+from product.models import ProductVariant
 from campaign.models import Campaign
 
 User = get_user_model()
@@ -18,7 +18,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart")
     product = models.ForeignKey(
-        Variation, on_delete=models.CASCADE, related_name="cart_product"
+        ProductVariant, on_delete=models.CASCADE, related_name="cart_item"
     )
     campaign = models.ForeignKey(
         Campaign,
