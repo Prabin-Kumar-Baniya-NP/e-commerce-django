@@ -1,49 +1,58 @@
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework.response import Response
+from rest_framework import generics
 from reviews.models import Reviews
+from rest_framework.permissions import IsAuthenticated
 from reviews.serializers import (
-    ReviewsSerializer,
-    ReviewsCreateSerializer,
-    ReviewUpdateSerializer,
+    ReviewsReadSerializer,
+    ReviewsWriteSerializer,
+    ReviewsUpdateSerializer,
 )
-from rest_framework.response import Response
+from reviews.permissions import HasObjectOwnership
 
 
-class ReviewsViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for CRUD operation on reviews
-    """
+class ReviewsList(generics.ListAPIView):
+    serializer_class = ReviewsReadSerializer
+    permission_classes = [IsAuthenticated]
 
-    def list(self, request):
+    def get_queryset(self):
         queryset = Reviews.objects.filter(is_approved=True)
-        serializer = ReviewsSerializer(queryset, many=True)
-        return Response(serializer.data)
+        product = self.request.query_params.get("product")
+        rating = self.request.query_params.get("rating")
+        user = self.request.query_params.get("user")
+        if product:
+            queryset = queryset.filter(product=product)
+        if rating:
+            queryset = queryset.filter(rating__lte=rating)
+        if user:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
 
-    def create(self, request):
-        serializer = ReviewsCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def retrieve(self, request, pk):
-        review = Reviews.objects.get(id=pk)
-        serializer = ReviewsSerializer(review)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class ReviewsDetail(generics.RetrieveAPIView):
+    queryset = Reviews.objects.filter(is_approved=True)
+    serializer_class = ReviewsReadSerializer
+    permission_classes = [IsAuthenticated]
 
-    def update(self, request, pk=None):
-        review = Reviews.objects.get(id=pk)
-        serializer = ReviewsSerializer(review, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def partial_update(self, request, pk=None):
-        review = Reviews.objects.get(id=pk)
-        serializer = ReviewsSerializer(review, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class UserReviewsList(generics.ListAPIView):
+    serializer_class = ReviewsReadSerializer
+    permission_classes = [IsAuthenticated]
 
-    def destroy(self, request, pk=None):
-        pass
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user)
+
+
+class ReviewsCreate(generics.CreateAPIView):
+    queryset = Reviews.objects.all()
+    serializer_class = ReviewsWriteSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ReviewsUpdate(generics.UpdateAPIView):
+    queryset = Reviews.objects.all()
+    serializer_class = ReviewsUpdateSerializer
+    permission_classes = [IsAuthenticated, HasObjectOwnership]
+
+
+class ReviewsDestroy(generics.DestroyAPIView):
+    queryset = Reviews.objects.all()
+    permission_classes = [IsAuthenticated, HasObjectOwnership]

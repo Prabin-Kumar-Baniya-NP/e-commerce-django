@@ -4,8 +4,8 @@ from reviews.models import Reviews
 
 class CustomReviewAdmin(admin.ModelAdmin):
     fields = ["user", "product", "rating", "comment", "image", "is_approved"]
-    list_display = ["user", "product", "rating"]
-    list_filter = ["rating"]
+    list_display = ["user", "product", "rating", "is_approved"]
+    list_filter = ["rating", "is_approved"]
     search_fields = [
         "product__name",
         "user__first_name",

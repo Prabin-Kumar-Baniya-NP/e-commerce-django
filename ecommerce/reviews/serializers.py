@@ -1,47 +1,41 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework.validators import UniqueTogetherValidator
 from reviews.models import Reviews
+from user.serializers import NestedUserSerializer
 
 
-class ReviewsSerializer(ModelSerializer):
+class ReviewsReadSerializer(ModelSerializer):
+    user = NestedUserSerializer()
+
     class Meta:
         model = Reviews
-        fields = [
+        fields = "__all__"
+
+
+class ReviewsWriteSerializer(ModelSerializer):
+    class Meta:
+        model = Reviews
+        fields = "__all__"
+        read_only_fields = [
+            "id",
+            "created_at",
+            "modified_at",
+        ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Reviews.objects.all(), fields=["user", "product"]
+            )
+        ]
+
+
+class ReviewsUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Reviews
+        fields = "__all__"
+        read_only_fields = [
             "id",
             "user",
             "product",
-            "rating",
-            "comment",
-            "image",
             "created_at",
             "modified_at",
         ]
-        read_only_fields = [
-            "created_at",
-            "modified_at",
-        ]
-
-
-class ReviewsCreateSerializer(ModelSerializer):
-    class Meta:
-        model = Reviews
-        fields = [
-            "user",
-            "product",
-            "rating",
-            "comment",
-            "image",
-        ]
-
-
-class ReviewUpdateSerializer(ModelSerializer):
-    class Meta:
-        model = Reviews
-        fields = [
-            "id"
-            "user",
-            "product",
-            "rating",
-            "comment",
-            "image",
-        ]
-        read_only_fields = ["id", "user", "product"]
