@@ -13,7 +13,7 @@ class CustomCampaignAdmin(admin.ModelAdmin):
         ("auto_apply"),
         ("is_active"),
     )
-    list_display = ["promocode", "is_active", "start_datetime", "end_datetime"]
+    list_display = ["name", "is_active", "start_datetime", "end_datetime"]
     search_fields = ["name", "product", "promocode"]
     list_filter = ["is_active", "auto_apply"]
 

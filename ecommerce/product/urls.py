@@ -2,6 +2,9 @@ from django.urls import path
 from rest_framework import routers
 from product import views
 
+
+app_name = "product"
+
 router = routers.SimpleRouter()
 router.register(r"product", views.ProductList, "list"),
 

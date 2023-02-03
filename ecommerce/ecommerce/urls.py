@@ -22,10 +22,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("user/", include("user.urls")),
-    path("product/", include("product.urls")),
-    path("category/", include("category.urls")),
-    path("reviews/", include("reviews.urls")),
+    path("user/", include("user.urls", namespace="user")),
+    path("product/", include("product.urls", namespace="product")),
+    path("category/", include("category.urls", namespace="category")),
+    path("reviews/", include("reviews.urls", namespace="reviews")),
+    path("campaign/", include("campaign.urls", namespace="campaign")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
 
