@@ -3,11 +3,11 @@ from product.models import ProductVariant
 
 
 class Inventory(models.Model):
-    product_varient = models.OneToOneField(
+    variant = models.OneToOneField(
         ProductVariant,
         on_delete=models.CASCADE,
         verbose_name="Product Varient",
-        related_name="product_inventory",
+        related_name="inventory",
     )
     available = models.PositiveIntegerField(default=0)
     sold = models.PositiveIntegerField(default=0)
@@ -19,4 +19,4 @@ class Inventory(models.Model):
         verbose_name_plural = "Inventories"
 
     def __str__(self):
-        return self.product_varient.name + " | " + self.product_varient.product.name
+        return self.variant.sku

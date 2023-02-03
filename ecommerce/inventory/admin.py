@@ -3,9 +3,9 @@ from inventory.models import Inventory
 
 
 class CustomInventoryAdmin(admin.ModelAdmin):
-    list_display = ["product_varient", "available", "sold"]
-    search_fields = ["product_varient__name"]
-    list_filter = ["product_varient__product__category__name"]
+    list_display = ["variant", "available", "sold"]
+    search_fields = ["variant__name"]
+    list_filter = ["variant__product__category__name"]
     readonly_fields = ["sold"]
 
 
