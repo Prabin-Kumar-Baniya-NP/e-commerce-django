@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.password_validation import validate_password
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -32,19 +33,22 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+GENDER_CHOICES = [("M", "Male"), ("F", "Female")]
+
+
 class User(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=32, blank=True)
+    first_name = models.CharField(max_length=32)
     middle_name = models.CharField(max_length=32, null=True, blank=True)
-    last_name = models.CharField(max_length=32, blank=True)
+    last_name = models.CharField(max_length=32)
     date_of_birth = models.DateField(
-        help_text="Format: Year-Month-Day", null=True, blank=True
+        help_text="Format: Year-Month-Day",
     )
     gender = models.CharField(
-        max_length=1, choices=[("M", "Male"), ("F", "Female")], null=True, blank=True
+        max_length=1, choices=GENDER_CHOICES
     )
-    email = models.EmailField(max_length=320, unique=True)
+    email = models.EmailField(max_length=254, unique=True)
     is_email_verified = models.BooleanField(default=False)
-    phone_number = PhoneNumberField(null=True, blank=True)
+    phone_number = PhoneNumberField(unique=True, null=True, blank=True)
     is_phone_number_verified = models.BooleanField(default=False)
     image = models.ImageField(upload_to="profileImage/", null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -56,7 +60,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "date_of_birth", "gender"]
 
     class Meta:
         verbose_name = "user"
@@ -70,6 +74,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         Returns the full name of user
         """
         return f"{self.first_name} {self.middle_name} {self.last_name}"
+    
+    def verify_email(self):
+        """
+        Sets is_email_verified to true
+        """
+        self.is_email_verified = True
+        self.save()
+        return None
+
+    def verify_phone_number(self):
+        """
+        Sets is_phone_number_verified to true
+        """
+        self.is_phone_number_verified = True
+        self.save()
+        return None
 
 
 ADDRESS_TYPE = (
@@ -96,3 +116,13 @@ class Address(models.Model):
 
     def __str__(self):
         return self.user.get_full_name() + " | " + self.type
+
+
+
+class OTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="otp")
+    count = models.PositiveIntegerField(default=0)
+    datetime = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.get_full_name() + " | " + str(self.count)

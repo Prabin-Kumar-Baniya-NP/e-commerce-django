@@ -1,10 +1,16 @@
 from django.contrib import admin
-from user.models import User, Address
+from user.models import User, Address, OTP
 
 
 class AddressInline(admin.TabularInline):
     model = Address
     fk_name = "user"
+
+class OTPInline(admin.TabularInline):
+    model = OTP
+    fk_name = "user"
+    readonly_fields = ["datetime"]
+    fields = ["id", "user", "count", "datetime"]
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -18,7 +24,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         ("is_staff"),
         ("is_superuser"),
     )
-    inlines = [AddressInline]
+    inlines = [AddressInline, OTPInline]
 
 
 admin.site.register(User, CustomUserAdmin)
