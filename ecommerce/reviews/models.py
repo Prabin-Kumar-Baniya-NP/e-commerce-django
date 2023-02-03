@@ -35,3 +35,4 @@ class Reviews(models.Model):
         unique_together = ["user", "product"]
         verbose_name = "Reviews"
         verbose_name_plural = "Reviews"
+        ordering = ["created_at"]

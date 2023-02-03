@@ -6,7 +6,6 @@ from reviews.serializers import (
     ReviewsWriteSerializer,
     ReviewsUpdateSerializer,
 )
-from reviews.permissions import HasObjectOwnership
 
 
 class ReviewsList(generics.ListAPIView):
@@ -23,7 +22,7 @@ class ReviewsList(generics.ListAPIView):
         if rating:
             queryset = queryset.filter(rating__lte=rating)
         if user:
-            queryset = queryset.filter(user=self.request.user)
+            queryset = queryset.filter(user=user)
         return queryset
 
 
@@ -40,14 +39,18 @@ class ReviewsCreate(generics.CreateAPIView):
 
 
 class ReviewsUpdate(generics.UpdateAPIView):
-    queryset = Reviews.objects.all()
     serializer_class = ReviewsUpdateSerializer
-    permission_classes = [IsAuthenticated, HasObjectOwnership]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user)
 
 
 class ReviewsDestroy(generics.DestroyAPIView):
-    queryset = Reviews.objects.all()
-    permission_classes = [IsAuthenticated, HasObjectOwnership]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Reviews.objects.filter(user=self.request.user)
 
 
 class UserReviewsList(generics.ListAPIView):

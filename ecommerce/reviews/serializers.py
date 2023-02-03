@@ -9,7 +9,7 @@ class ReviewsReadSerializer(ModelSerializer):
 
     class Meta:
         model = Reviews
-        fields = "__all__"
+        exclude = ["is_approved"]
 
 
 class ReviewsWriteSerializer(ModelSerializer):
