@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from product.models import Product
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Count, Avg
 
 User = get_user_model()
 
@@ -28,11 +29,16 @@ class Reviews(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.product.name + " | " + self.user.get_full_name()
-
     class Meta:
         unique_together = ["user", "product"]
         verbose_name = "Reviews"
         verbose_name_plural = "Reviews"
         ordering = ["created_at"]
+
+    def __str__(self):
+        return self.product.name + " | " + self.user.get_full_name()
+
+    def get_reviews_summary(product_id):
+        return Reviews.objects.filter(product=product_id).aggregate(
+            Avg("rating"), Count("rating")
+        )

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from product.models import Product, ProductAttribute, ProductVariant
+from reviews.models import Reviews
 from category.serializers import CategoryListSerializer
+from inventory.serializers import InventoryReadSerializer
 
 
 class ProductAttributeSerializer(serializers.ModelSerializer):
@@ -9,7 +11,9 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "value"]
 
 
-class ProductVariantListSerializer(serializers.ModelSerializer):
+class ProductVariantSerializer(serializers.ModelSerializer):
+    inventory = InventoryReadSerializer()
+
     class Meta:
         model = ProductVariant
         fields = [
@@ -17,45 +21,21 @@ class ProductVariantListSerializer(serializers.ModelSerializer):
             "attribute",
             "price",
             "currency",
+            "inventory",
             "image",
         ]
         depth = 1
 
 
-class ProductVariantDetailSerializer(serializers.ModelSerializer):
-    attribute = ProductAttributeSerializer(many=True)
-
-    class Meta:
-        model = ProductVariant
-        fields = [
-            "id",
-            "product",
-            "attribute",
-            "price",
-            "currency",
-            "image",
-        ]
-
-
-class ProductListSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     category = CategoryListSerializer(many=True)
-    variant = ProductVariantListSerializer(many=True)
+    variant = ProductVariantSerializer(many=True)
+    ratings = serializers.SerializerMethodField(method_name="get_ratings")
 
     class Meta:
         model = Product
-        fields = ["id", "name", "description", "category", "variant"]
+        fields = ["id", "name", "description", "category", "ratings", "variant"]
 
+    def get_ratings(self, obj):
+        return Reviews.get_reviews_summary(obj.id)
 
-class ProductDetailSerializer(serializers.ModelSerializer):
-    category = CategoryListSerializer(many=True)
-    variant = ProductVariantListSerializer(many=True)
-
-    class Meta:
-        model = Product
-        fields = [
-            "id",
-            "name",
-            "description",
-            "category",
-            "variant",
-        ]
