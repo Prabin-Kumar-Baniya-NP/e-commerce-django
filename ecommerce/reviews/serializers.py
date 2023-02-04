@@ -1,10 +1,10 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from reviews.models import Reviews
 from user.serializers import NestedUserSerializer
 
 
-class ReviewsReadSerializer(ModelSerializer):
+class ReviewsReadSerializer(serializers.ModelSerializer):
     user = NestedUserSerializer()
 
     class Meta:
@@ -12,7 +12,7 @@ class ReviewsReadSerializer(ModelSerializer):
         exclude = ["is_approved"]
 
 
-class ReviewsWriteSerializer(ModelSerializer):
+class ReviewsWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = "__all__"
@@ -28,7 +28,7 @@ class ReviewsWriteSerializer(ModelSerializer):
         ]
 
 
-class ReviewsUpdateSerializer(ModelSerializer):
+class ReviewsUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = "__all__"

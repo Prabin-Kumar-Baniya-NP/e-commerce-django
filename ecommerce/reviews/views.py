@@ -1,15 +1,11 @@
 from rest_framework import generics
 from reviews.models import Reviews
 from rest_framework.permissions import IsAuthenticated
-from reviews.serializers import (
-    ReviewsReadSerializer,
-    ReviewsWriteSerializer,
-    ReviewsUpdateSerializer,
-)
+from reviews import serializers
 
 
 class ReviewsList(generics.ListAPIView):
-    serializer_class = ReviewsReadSerializer
+    serializer_class = serializers.ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -28,18 +24,18 @@ class ReviewsList(generics.ListAPIView):
 
 class ReviewsDetail(generics.RetrieveAPIView):
     queryset = Reviews.objects.filter(is_approved=True)
-    serializer_class = ReviewsReadSerializer
+    serializer_class = serializers.ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
 
 class ReviewsCreate(generics.CreateAPIView):
     queryset = Reviews.objects.all()
-    serializer_class = ReviewsWriteSerializer
+    serializer_class = serializers.ReviewsWriteSerializer
     permission_classes = [IsAuthenticated]
 
 
 class ReviewsUpdate(generics.UpdateAPIView):
-    serializer_class = ReviewsUpdateSerializer
+    serializer_class = serializers.ReviewsUpdateSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -54,7 +50,7 @@ class ReviewsDestroy(generics.DestroyAPIView):
 
 
 class UserReviewsList(generics.ListAPIView):
-    serializer_class = ReviewsReadSerializer
+    serializer_class = serializers.ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -62,7 +58,7 @@ class UserReviewsList(generics.ListAPIView):
 
 
 class UserReviewsDetail(generics.RetrieveAPIView):
-    serializer_class = ReviewsReadSerializer
+    serializer_class = serializers.ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
