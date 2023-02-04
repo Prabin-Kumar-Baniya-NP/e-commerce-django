@@ -11,4 +11,5 @@ router.register(r"product", views.ProductList, "list"),
 urlpatterns = [
     path("", views.ProductList.as_view(), name="list"),
     path("<int:pk>/", views.ProductDetail.as_view(), name="detail"),
+    path("variant/", views.ProductVariantList.as_view(), name="detail"),
 ]
