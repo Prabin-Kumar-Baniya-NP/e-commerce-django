@@ -5,7 +5,7 @@ from cart.models import Cart, CartItem
 class CartItemInline(admin.TabularInline):
     model = CartItem
     fk_name = "cart"
-    fields = ["product", "campaign"]
+    fields = ["variant", "campaign", "quantity"]
 
 
 class CustomCartAdmin(admin.ModelAdmin):

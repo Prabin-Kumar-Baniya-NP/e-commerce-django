@@ -28,6 +28,7 @@ urlpatterns = [
     path("reviews/", include("reviews.urls", namespace="reviews")),
     path("campaign/", include("campaign.urls", namespace="campaign")),
     path("inventory/", include("inventory.urls", namespace="inventory")),
+    path("cart/", include("cart.urls", namespace="cart")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
 

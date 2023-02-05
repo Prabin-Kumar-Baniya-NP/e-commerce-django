@@ -1,3 +1,49 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from cart import serializers
+from cart.models import Cart, CartItem
 
-# Create your views here.
+
+class CartViewSet(viewsets.GenericViewSet):
+    """
+    Viewset for getting and clearing cart of the user
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get_cart_object(self):
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        return cart
+
+    @action(methods=["GET"], detail=False, url_path="get", url_name="get")
+    def get_cart(self, request, *args, **kwargs):
+        serializer = serializers.CartSerializer(self.get_cart_object())
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["DELETE"], detail=False, url_path="clear", url_name="clear")
+    def clear_cart(self, request, *args, **kwargs):
+        count, deleted = CartItem.objects.filter(cart=self.get_cart_object()).delete()
+        return Response({"count": count}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CartItemViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for creating, updating, reading cart item information
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get_cart_object(self):
+        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        return cart
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart=self.get_cart_object())
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.method == "GET":
+            return serializers.CartItemReadSerializer
+        return serializers.CartItemWriteSerializer

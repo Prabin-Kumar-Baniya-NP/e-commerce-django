@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_cart")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -16,23 +16,27 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart")
-    product = models.ForeignKey(
-        ProductVariant, on_delete=models.CASCADE, related_name="cart_item"
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="item")
+    variant = models.ForeignKey(
+        ProductVariant, on_delete=models.CASCADE, related_name="cart_product"
     )
     campaign = models.ForeignKey(
         Campaign,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="campaign",
+        related_name="cart_campaign",
     )
+    quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Cart Item"
         verbose_name_plural = "Cart Items"
+        constraints = [
+            models.UniqueConstraint(fields=["cart", "variant"], name="unique product in cart")
+        ]
 
     def __str__(self):
-        return self.product.name
+        return self.variant.sku
