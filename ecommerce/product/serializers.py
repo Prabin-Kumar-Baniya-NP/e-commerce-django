@@ -28,14 +28,9 @@ class NestedVariantSerializer(serializers.ModelSerializer):
 
 
 class NestedProductSerializer(serializers.ModelSerializer):
-    ratings = serializers.SerializerMethodField(method_name="get_ratings")
-
     class Meta:
         model = Product
-        fields = ["id", "name", "description", "ratings"]
-
-    def get_ratings(self, obj):
-        return Reviews.get_reviews_summary(obj.id)
+        fields = ["id", "name", "description"]
 
 
 class VariantListSerializer(serializers.ModelSerializer):
@@ -60,11 +55,13 @@ class VariantListSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategoryListSerializer(many=True)
     variant = NestedVariantSerializer(many=True)
-    ratings = serializers.SerializerMethodField(method_name="get_ratings")
 
     class Meta:
         model = Product
-        fields = ["id", "name", "description", "category", "ratings", "variant"]
+        fields = ["id", "name", "description", "category", "variant"]
 
-    def get_ratings(self, obj):
-        return Reviews.get_reviews_summary(obj.id)
+
+class ProductRatingSerializer(serializers.Serializer):
+    product = serializers.IntegerField(source="id")
+    average = serializers.DecimalField(max_digits=3, decimal_places=2)
+    count = serializers.IntegerField()

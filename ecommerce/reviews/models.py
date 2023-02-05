@@ -37,8 +37,3 @@ class Reviews(models.Model):
 
     def __str__(self):
         return self.product.name + " | " + self.user.get_full_name()
-
-    def get_reviews_summary(product_id):
-        return Reviews.objects.filter(product=product_id, is_approved=True).aggregate(
-            Avg("rating"), Count("rating")
-        )
