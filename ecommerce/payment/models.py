@@ -1,7 +1,7 @@
 from django.db import models
 from order.models import Order
 
-PROVIDER_CHOICES = (
+PROVIDER_PROVIDER = (
     ("Stripe", "Stripe"),
     ("PayPal", "PayPal"),
     ("Paytm", "Paytm"),
@@ -17,7 +17,7 @@ PAYMENT_CHOICES = (
 
 class Payment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name="payment")
-    provider = models.CharField(max_length=32, choices=PROVIDER_CHOICES)
+    provider = models.CharField(max_length=32, choices=PROVIDER_PROVIDER)
     status = models.CharField(max_length=2, choices=PAYMENT_CHOICES, default="PS")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

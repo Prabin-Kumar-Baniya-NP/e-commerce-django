@@ -43,3 +43,26 @@ class ProductSerializer(serializers.ModelSerializer):
             "rating_average",
             "rating_count",
         ]
+
+
+class NestedVariantSerializer(serializers.ModelSerializer):
+    attribute = AttributeSerializer(many=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = [
+            "id",
+            "attribute",
+            "sku",
+            "image",
+        ]
+
+
+class NestedProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+        ]

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth import get_user_model
 from product.models import ProductVariant
@@ -35,8 +36,15 @@ class CartItem(models.Model):
         verbose_name = "Cart Item"
         verbose_name_plural = "Cart Items"
         constraints = [
-            models.UniqueConstraint(fields=["cart", "variant"], name="unique product in cart")
+            models.UniqueConstraint(
+                fields=["cart", "variant"], name="unique product in cart"
+            )
         ]
 
     def __str__(self):
         return self.variant.sku
+
+    def get_item_price(self):
+        price = self.variant.price
+        discount = self.campaign.discount if self.campaign else Decimal(0.00)
+        return price - (discount / 100) * price
