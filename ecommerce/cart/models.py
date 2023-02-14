@@ -15,6 +15,13 @@ class Cart(models.Model):
     def __str__(self):
         return self.user.get_full_name()
 
+    def get_total_cart_price(self):
+        items = CartItem.objects.filter(cart=self.id)
+        sum = Decimal(0.00)
+        for product in items:
+            sum = sum + product.get_total_item_price()
+        return sum
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="item")
@@ -44,7 +51,7 @@ class CartItem(models.Model):
     def __str__(self):
         return self.variant.sku
 
-    def get_item_price(self):
+    def get_total_item_price(self):
         price = self.variant.price
         discount = self.campaign.discount if self.campaign else Decimal(0.00)
         return price - (discount / 100) * price

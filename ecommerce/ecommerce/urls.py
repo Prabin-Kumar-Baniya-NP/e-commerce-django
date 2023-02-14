@@ -30,6 +30,7 @@ urlpatterns = [
     path("inventory/", include("inventory.urls", namespace="inventory")),
     path("cart/", include("cart.urls", namespace="cart")),
     path("order/", include("order.urls", namespace="order")),
+    path("payment/", include("payment.urls", namespace="payment")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
 

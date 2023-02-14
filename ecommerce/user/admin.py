@@ -6,6 +6,7 @@ class AddressInline(admin.TabularInline):
     model = Address
     fk_name = "user"
 
+
 class OTPInline(admin.TabularInline):
     model = OTP
     fk_name = "user"
@@ -28,3 +29,4 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Address)
