@@ -1,7 +1,8 @@
+from django.db.models import RestrictedError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed, PermissionDenied, NotFound
 from user.models import Address
@@ -232,5 +233,8 @@ def delete_address(request, id):
         address = Address.objects.get(id=id, user=request.user)
     except Address.DoesNotExist:
         raise NotFound(detail="Address Not Found")
-    address.delete()
+    try:
+        address.delete()
+    except RestrictedError as e:
+        raise PermissionDenied("Object is referenced to restricted foreign key")
     return Response(status=status.HTTP_204_NO_CONTENT)
