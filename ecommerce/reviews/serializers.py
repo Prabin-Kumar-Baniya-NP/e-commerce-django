@@ -16,11 +16,6 @@ class ReviewsWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = "__all__"
-        read_only_fields = [
-            "id",
-            "created_at",
-            "modified_at",
-        ]
         validators = [
             UniqueTogetherValidator(
                 queryset=Reviews.objects.all(), fields=["user", "product"]
@@ -32,10 +27,4 @@ class ReviewsUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = "__all__"
-        read_only_fields = [
-            "id",
-            "user",
-            "product",
-            "created_at",
-            "modified_at",
-        ]
+        read_only_fields = ["user", "product"]

@@ -21,10 +21,6 @@ class CartItemWriteSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         ]
-        read_only_fields = [
-            "created_at",
-            "modified_at",
-        ]
         validators = [
             UniqueTogetherValidator(
                 queryset=CartItem.objects.all(), fields=["cart", "variant"]
@@ -44,5 +40,4 @@ class CartSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "user",
             "item",
-            "modified_at",
         ]

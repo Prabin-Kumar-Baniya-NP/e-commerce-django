@@ -19,12 +19,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        read_only_fields = [
-            "id",
-            "last_login",
-            "date_joined",
-            "last_updated",
-        ]
         exclude = [
             "is_active",
             "is_staff",
@@ -47,7 +41,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         read_only_fields = [
-            "id",
             "email",
         ]
         exclude = [
@@ -114,7 +107,7 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = "__all__"
-        read_only_fields = ["id", "user", "created_on", "modified_on"]
+        read_only_fields = ["user"]
 
 class ResetPasswordSerializer(serializers.Serializer):
     otp = serializers.CharField(max_length=6)

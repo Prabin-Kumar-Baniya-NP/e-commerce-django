@@ -51,7 +51,7 @@ class OrderWriteSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         ]
-        read_only_fields = ["user", "created_at", "modified_at"]
+        read_only_fields = ["user"]
 
     def create(self, validated_data):
         try:
