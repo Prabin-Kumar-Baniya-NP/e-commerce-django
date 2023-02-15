@@ -105,17 +105,18 @@ def verify_number(request):
     otp = OTPHandler(request.user.id, settings.OTP_LIFETIME, "phone_number")
 
     if request.method == "GET":
-        if not request.user.is_phone_number_verified:
-            otp = otp.generate_otp()
-            send_phone_number_verification_otp(otp, request.user.phone_number.as_e164)
+        if request.user.phone_number:
+            if not request.user.is_phone_number_verified:
+                otp = otp.generate_otp()
+                send_phone_number_verification_otp(otp, request.user.phone_number.as_e164)
 
-            context = {
-                "status": f"OTP sent to {request.user.phone_number}",
-                "validity": f"{settings.OTP_LIFETIME} minutes",
-            }
-            return Response(context, status=status.HTTP_200_OK)
-        else:
+                context = {
+                    "status": f"OTP sent to {request.user.phone_number}",
+                    "validity": f"{settings.OTP_LIFETIME} minutes",
+                }
+                return Response(context, status=status.HTTP_200_OK)
             raise PermissionDenied("Phone number already verified")
+        raise NotFound("Phone Number Not Found")
 
     if request.method == "POST":
         otp_verified = otp.verify_otp(request.data["otp"])
