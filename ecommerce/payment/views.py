@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.reverse import reverse
 from payment import serializers
 from payment.models import Payment
 from order.models import Order
@@ -83,8 +84,8 @@ class StripeViewSet(viewsets.ViewSet):
                     for item in order.order_item.all()
                 ],
                 mode="payment",
-                success_url="http://127.0.0.1:8000/payment/status/success/",
-                cancel_url="http://127.0.0.1:8000/payment/status/cancel/",
+                success_url=reverse("payment:status-success", request=request),
+                cancel_url=reverse("payment:status-cancel", request=request),
                 metadata={
                     "user_id": request.user.id,
                     "order_id": order.id,
