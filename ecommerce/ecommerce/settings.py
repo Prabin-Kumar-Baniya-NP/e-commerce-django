@@ -131,8 +131,10 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
-    "PAGE_SIZE": 100,
+    "PAGE_SIZE": 10,
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
+    #"DEFAULT_VERSION": "v1.0", # Default is None
+    "ALLOWED_VERSIONS": ["v1.0", "v1.1", "v2.0"], # Default is None
 }
 
 SIMPLE_JWT = {
