@@ -10,6 +10,7 @@ class ProductFilter(BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
         # Get Query Parameters
+        product_name = request.query_params.get("name")
         category_list = request.query_params.getlist("category")
         min_avg_rating = request.query_params.get("min_avg_rating")
         max_price = request.query_params.get("max_price")
@@ -17,6 +18,9 @@ class ProductFilter(BaseFilterBackend):
         ordering = request.query_params.get("ordering")
 
         # Apply Filter
+        if product_name:
+            queryset = queryset.filter(name__icontains = product_name)
+
         if category_list is not None:
             for category in category_list:
                 queryset = queryset.filter(category__id=int(category))

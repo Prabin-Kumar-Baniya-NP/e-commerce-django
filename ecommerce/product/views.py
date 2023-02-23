@@ -4,9 +4,53 @@ from product.models import Product
 from product.serializers import ProductSerializer
 from product.pagination import ProductPagination
 from product.filters import ProductFilter
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.types import OpenApiTypes
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="name",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+        ),
+        OpenApiParameter(
+            name="category",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            
+        ),
+        OpenApiParameter(
+            name="min_avg_rating",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            
+        ),
+        OpenApiParameter(
+            name="max_price",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            
+        ),
+        OpenApiParameter(
+            name="min_price",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            
+        ),
+        OpenApiParameter(
+            name="ordering",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY,
+            
+        ),
+    ]
+)
 class ProductList(generics.ListAPIView):
+    """
+    Lists the products
+    """
 
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
