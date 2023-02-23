@@ -1,11 +1,11 @@
 from rest_framework import generics
 from reviews.models import Reviews
 from rest_framework.permissions import IsAuthenticated
-from reviews import serializers
+from reviews.serializers import ReviewsReadSerializer, ReviewsUpdateSerializer, ReviewsWriteSerializer
 
 
 class ReviewsList(generics.ListAPIView):
-    serializer_class = serializers.ReviewsReadSerializer
+    serializer_class = ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -24,18 +24,18 @@ class ReviewsList(generics.ListAPIView):
 
 class ReviewsDetail(generics.RetrieveAPIView):
     queryset = Reviews.objects.filter(is_approved=True)
-    serializer_class = serializers.ReviewsReadSerializer
+    serializer_class = ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
 
 class ReviewsCreate(generics.CreateAPIView):
     queryset = Reviews.objects.all()
-    serializer_class = serializers.ReviewsWriteSerializer
+    serializer_class = ReviewsWriteSerializer
     permission_classes = [IsAuthenticated]
 
 
 class ReviewsUpdate(generics.UpdateAPIView):
-    serializer_class = serializers.ReviewsUpdateSerializer
+    serializer_class = ReviewsUpdateSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -43,6 +43,8 @@ class ReviewsUpdate(generics.UpdateAPIView):
 
 
 class ReviewsDestroy(generics.DestroyAPIView):
+    queryset = Reviews.objects.all()
+    serializer_class = ReviewsWriteSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -50,7 +52,7 @@ class ReviewsDestroy(generics.DestroyAPIView):
 
 
 class UserReviewsList(generics.ListAPIView):
-    serializer_class = serializers.ReviewsReadSerializer
+    serializer_class = ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -58,7 +60,7 @@ class UserReviewsList(generics.ListAPIView):
 
 
 class UserReviewsDetail(generics.RetrieveAPIView):
-    serializer_class = serializers.ReviewsReadSerializer
+    serializer_class = ReviewsReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

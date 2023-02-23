@@ -5,5 +5,5 @@ app_name = "inventory"
 
 
 urlpatterns = [
-    path("<int:variant_id>/", views.inventory_detail, name="detail"),
+    path("<int:variant>/", views.InventoryDetail.as_view(), name="detail"),
 ]

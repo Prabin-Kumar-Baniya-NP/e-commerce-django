@@ -1,14 +1,14 @@
 from django.db.models import Avg, Count
 from rest_framework import generics
 from product.models import Product
-from product import serializers
+from product.serializers import ProductSerializer
 from product.pagination import ProductPagination
 from product.filters import ProductFilter
 
 
 class ProductList(generics.ListAPIView):
 
-    serializer_class = serializers.ProductSerializer
+    serializer_class = ProductSerializer
     pagination_class = ProductPagination
     filter_backends = [ProductFilter]
 
@@ -23,7 +23,7 @@ class ProductList(generics.ListAPIView):
 
 class ProductDetail(generics.RetrieveAPIView):
     queryset = Product.objects.filter(is_active=True)
-    serializer_class = serializers.ProductSerializer
+    serializer_class = ProductSerializer
 
     def get_queryset(self):
         return (

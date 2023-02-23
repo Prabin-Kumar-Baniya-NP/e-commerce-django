@@ -2,28 +2,30 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from order import serializers
 from order.models import Order, OrderItem
-from rest_framework.exceptions import NotFound
+from order.serializers import (
+    OrderReadSerializer,
+    OrderWriteSerializer,
+    OrderItemSerializer,
+)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderReadSerializer
+    queryset = Order.objects.all()
     http_method_names = ["get", "post", "delete"]
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        if self.request.method == "GET":
-            return serializers.OrderReadSerializer
-        return serializers.OrderWriteSerializer
-
-    def get_object(self):
-        return Order.objects.get(id=self.kwargs["pk"], user=self.request.user)
+        if self.request.method == "POST":
+            return OrderWriteSerializer
+        return super().get_serializer_class()
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        return super().get_queryset().filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        serializer = serializers.OrderWriteSerializer(
+        serializer = OrderWriteSerializer(
             data=request.data, context={"user_id": request.user.id}
         )
         serializer.is_valid(raise_exception=True)
@@ -32,16 +34,14 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class OrderItemViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.OrderItemSerializer
+    serializer_class = OrderItemSerializer
+    queryset = OrderItem.objects.all()
     http_method_names = ["get", "patch", "delete"]
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        return OrderItem.objects.get(id=self.kwargs["pk"])
-
     def get_queryset(self):
-        queryset = OrderItem.objects.filter(order__user=self.request.user)
-        order = self.request.query_params.get("order")
-        if order:
-            return queryset.filter(order__id=order)
-        raise NotFound("Order id is required")
+        queryset = super().get_queryset()
+        queryset = queryset.filter(
+            order__id=self.kwargs["order_id"], order__user=self.request.user
+        )
+        return queryset
