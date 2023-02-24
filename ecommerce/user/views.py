@@ -47,7 +47,7 @@ User = get_user_model()
 @api_view(["POST"])
 def signup(request):
     """
-    Handles user signup
+    Creates a new user
     """
     serializer = UserRegistrationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -65,9 +65,10 @@ def signup(request):
     },
 )
 @api_view(["PUT", "PATCH"])
+@permission_classes([IsAuthenticated])
 def update_user(request):
     """
-    Handles user signup
+    Updates the user data
     """
     serializer = UserUpdateSerializer(
         instance=request.user,
@@ -83,7 +84,7 @@ def update_user(request):
 @api_view(["GET"])
 def user_detail(request):
     """
-    Provides user information
+    Returns user data
     """
     serializer = UserDetailSerializer(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
