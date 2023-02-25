@@ -37,7 +37,7 @@ class ProductVariant(models.Model):
     attribute = models.ManyToManyField(
         ProductAttribute, related_name="product_variants"
     )
-    sku = models.CharField(max_length=64)
+    sku = models.CharField(max_length=64, unique=True)
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
