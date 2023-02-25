@@ -31,6 +31,7 @@ from drf_spectacular.utils import (
     OpenApiResponse,
     inline_serializer,
 )
+from drf_spectacular.types import OpenApiTypes
 
 User = get_user_model()
 
@@ -258,6 +259,14 @@ def verify_number(request):
 
 @extend_schema_view(
     get=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="email",
+                description="Email to send OTP",
+                location=OpenApiParameter.QUERY,
+                type=OpenApiTypes.EMAIL,
+            )
+        ],
         responses={
             200: inline_serializer(
                 name="ResetPassword",
@@ -266,7 +275,7 @@ def verify_number(request):
                     "validity": serializers.CharField(),
                 },
             )
-        }
+        },
     ),
     post=extend_schema(
         request=inline_serializer(
@@ -327,7 +336,7 @@ def reset_password(request):
         raise AuthenticationFailed("OTP is invalid or expired")
 
 
-@extend_schema(responses={200: AddressSerializer})
+@extend_schema(responses={200: AddressSerializer(many=True)})
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def list_address(request):
@@ -340,12 +349,20 @@ def list_address(request):
 
 
 @extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="id",
+            description="Id of address",
+            location=OpenApiParameter.PATH,
+            type=OpenApiTypes.INT,
+        )
+    ],
     responses={
         200: AddressSerializer,
         404: OpenApiResponse(
             response=HTTP4XXExceptionSerializer, description="Address Not Found"
         ),
-    }
+    },
 )
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -385,7 +402,7 @@ def create_address(request):
 @extend_schema(
     request=AddressSerializer,
     responses={
-        200: AddressSerializer,
+        201: AddressSerializer,
         400: OpenApiResponse(
             response=HTTP4XXExceptionSerializer, description="Data Validation Error"
         ),
@@ -413,7 +430,7 @@ def update_address(request, id):
 
     serializer.is_valid(raise_exception=True)
     serializer.save(user=request.user)
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
 @extend_schema(
