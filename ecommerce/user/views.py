@@ -59,7 +59,7 @@ def signup(request):
 @extend_schema(
     request=UserUpdateSerializer,
     responses={
-        201: UserUpdateSerializer,
+        200: UserUpdateSerializer,
         400: OpenApiResponse(
             response=HTTP4XXExceptionSerializer, description="Data Validation Error"
         ),
@@ -78,7 +78,7 @@ def update_user(request):
     )
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema(responses={200: UserDetailSerializer})
@@ -94,7 +94,7 @@ def user_detail(request):
 @extend_schema(
     request=PasswordChangeSerializer,
     responses={
-        201: OpenApiResponse(
+        200: OpenApiResponse(
             response=None, description="Password Changed Successfully"
         ),
         400: OpenApiResponse(
@@ -111,7 +111,7 @@ def change_password(request):
     serializer = PasswordChangeSerializer(instance=request.user, data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_200_OK)
 
 
 @extend_schema_view(
@@ -288,7 +288,7 @@ def verify_number(request):
             },
         ),
         responses={
-            201: OpenApiResponse(response=None, description="Password Reset Completed"),
+            200: OpenApiResponse(response=None, description="Password Reset Completed"),
             400: OpenApiResponse(
                 response=HTTP4XXExceptionSerializer, description="Data Validation Error"
             ),
@@ -332,7 +332,7 @@ def reset_password(request):
             serializer = ResetPasswordSerializer(instance=user, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_200_OK)
         raise AuthenticationFailed("OTP is invalid or expired")
 
 
@@ -402,7 +402,7 @@ def create_address(request):
 @extend_schema(
     request=AddressSerializer,
     responses={
-        201: AddressSerializer,
+        200: AddressSerializer,
         400: OpenApiResponse(
             response=HTTP4XXExceptionSerializer, description="Data Validation Error"
         ),
@@ -430,7 +430,7 @@ def update_address(request, id):
 
     serializer.is_valid(raise_exception=True)
     serializer.save(user=request.user)
-    return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 @extend_schema(

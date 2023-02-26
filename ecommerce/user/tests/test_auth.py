@@ -23,7 +23,7 @@ def test_user_can_update_date_of_birth(authenticated_client):
         "date_of_birth": "2001-11-11",
     }
     response = authenticated_client.patch(reverse("user:update"), payload)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 def test_user_can_view_user_details(authenticated_client):
@@ -37,7 +37,7 @@ def test_user_can_change_password(authenticated_client):
         "password2": "new_password@12345",
     }
     response = authenticated_client.put(reverse("user:change-password"), payload)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 def test_user_can_get_email_verification_otp(authenticated_client):
@@ -77,4 +77,4 @@ def test_user_can_reset_password_using_otp(user_factory, anonymous_client):
         "password2": "reset_password@12345",
     }
     response = anonymous_client.post(reverse("user:reset-password"), payload)
-    assert response.status_code == 201
+    assert response.status_code == 200

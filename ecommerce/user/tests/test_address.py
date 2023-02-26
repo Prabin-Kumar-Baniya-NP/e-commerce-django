@@ -42,7 +42,7 @@ def test_update_address(address_client):
     response = client.patch(
         reverse("user:update-address", kwargs={"id": address.id}), payload
     )
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 def test_delete_address(address_client):
