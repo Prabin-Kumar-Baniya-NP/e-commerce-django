@@ -26,7 +26,7 @@ from drf_spectacular.types import OpenApiTypes
             type=OpenApiTypes.INT,
         )
     ],
-    responses=CampaignReadSerializer,
+    responses=CampaignReadSerializer(many=True),
 )
 @api_view(["GET"])
 def campaign_list(request, product_id):
@@ -65,12 +65,12 @@ def campaign_list(request, product_id):
         ),
         403: OpenApiResponse(
             response=HTTP4XXExceptionSerializer,
-            description="Promocode is Invalid",
+            description="Promocode Currently Unavailable",
             examples=[
                 OpenApiExample(
-                    "Invalid Promocode",
+                    "invalid promocode",
                     value={
-                        "detail": "Invalid Promocode",
+                        "detail": "Promocode Currently Unavailable",
                     },
                     status_codes=[403],
                     response_only=True,
@@ -107,4 +107,4 @@ def check_promocode(request, product_id, promocode):
     if campaign.start_datetime <= now and campaign.end_datetime >= now:
         serializer = CampaignReadSerializer(campaign)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    raise PermissionDenied(detail="Invalid Promocode")
+    raise PermissionDenied(detail="Promocode Currently Unavailable")
