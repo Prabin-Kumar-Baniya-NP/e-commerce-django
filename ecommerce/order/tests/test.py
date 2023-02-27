@@ -37,22 +37,24 @@ def test_delete_order(order_client):
     assert response.status_code == 204
 
 
-def test_list_order_item(order_item_client):
-    order_item, client = order_item_client
+def test_list_order_item(order_client):
+    order, client = order_client
+    order_item = order.order_item.all()[0]
     response = client.get(
-        reverse("order:item-list", kwargs={"order_id": order_item.order.id})
+        reverse("order:item-list", kwargs={"order_id": order.id})
     )
     assert response.status_code == 200
     serializer = OrderItemSerializer([order_item], many=True)
     assert response.data["results"] == serializer.data
 
 
-def test_delete_order_item(order_item_client):
-    order_item, client = order_item_client
+def test_delete_order_item(order_client):
+    order, client = order_client
+    order_item = order.order_item.all()[0]
     response = client.delete(
         reverse(
             "order:item-detail",
-            kwargs={"order_id": order_item.order.id, "pk": order_item.id},
+            kwargs={"order_id": order.id, "pk": order_item.id},
         )
     )
     assert response.status_code == 204

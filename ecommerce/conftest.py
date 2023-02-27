@@ -13,6 +13,7 @@ from inventory.tests.factory import InventoryFactory
 from reviews.tests.factory import ReviewsFactory
 from cart.tests.factory import CartFactory, CartItemFactory
 from order.tests.factory import OrderFactory, OrderItemFactory
+from payment.tests.factory import PaymentFactory
 from rest_framework_simplejwt.tokens import RefreshToken
 
 register(UserFactory)
@@ -28,6 +29,7 @@ register(CartFactory)
 register(CartItemFactory)
 register(OrderFactory)
 register(OrderItemFactory)
+register(PaymentFactory)
 
 
 import pytest
