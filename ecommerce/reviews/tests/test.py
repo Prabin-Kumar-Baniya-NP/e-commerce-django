@@ -39,6 +39,8 @@ def test_reviews_update(reviews_client):
         reverse("reviews:update", kwargs={"pk": reviews.id}), payload
     )
     assert response.status_code == 200
+    reviews.refresh_from_db()
+    assert reviews.comment == payload["comment"]
 
 
 def test_reviews_delete(reviews_client):

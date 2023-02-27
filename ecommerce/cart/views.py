@@ -39,7 +39,7 @@ class CartViewSet(viewsets.GenericViewSet):
 
 class CartItemViewSet(viewsets.ModelViewSet):
     """
-    Viewset for creating, updating, reading cart item information
+    Viewset for creating, updating, reading and deleting cart item information
     """
 
     serializer_class = CartItemSerializer
@@ -49,6 +49,9 @@ class CartItemViewSet(viewsets.ModelViewSet):
     def get_cart_object(self):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
         return cart
+
+    def get_object(self):
+        return CartItem.objects.get(id=self.kwargs["pk"], cart=self.request.user.cart)
 
     def get_queryset(self):
         return CartItem.objects.filter(cart=self.request.user.cart)
