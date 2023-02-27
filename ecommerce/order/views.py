@@ -36,7 +36,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderItemViewSet(viewsets.ModelViewSet):
     serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
-    http_method_names = ["get", "patch", "delete"]
+    http_method_names = ["get", "delete"]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

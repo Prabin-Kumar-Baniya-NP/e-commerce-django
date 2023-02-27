@@ -20,7 +20,7 @@ ORDER_STATUS = (
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.RESTRICT, related_name="order")
-    status = models.CharField(max_length=32, choices=ORDER_STATUS, default="PP")
+    status = models.CharField(max_length=32, choices=ORDER_STATUS, default="CREATED")
     shipping_address = models.ForeignKey(
         Address, on_delete=models.RESTRICT, related_name="order_address"
     )

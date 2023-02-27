@@ -12,6 +12,7 @@ from campaign.tests.factory import CampaignFactory
 from inventory.tests.factory import InventoryFactory
 from reviews.tests.factory import ReviewsFactory
 from cart.tests.factory import CartFactory, CartItemFactory
+from order.tests.factory import OrderFactory, OrderItemFactory
 from rest_framework_simplejwt.tokens import RefreshToken
 
 register(UserFactory)
@@ -25,6 +26,8 @@ register(InventoryFactory)
 register(ReviewsFactory)
 register(CartFactory)
 register(CartItemFactory)
+register(OrderFactory)
+register(OrderItemFactory)
 
 
 import pytest
