@@ -24,6 +24,7 @@ class VariantSerializer(serializers.ModelSerializer):
             "currency",
             "inventory",
             "image",
+            "is_default",
         ]
 
 
@@ -53,16 +54,10 @@ class NestedVariantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductVariant
-        fields = [
-            "id",
-            "attribute",
-            "sku",
-            "image",
-        ]
+        fields = ["id", "attribute", "sku", "image", "is_default"]
 
 
 class NestedProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Product
         fields = [
