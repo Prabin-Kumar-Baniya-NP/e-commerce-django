@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "reviews.apps.ReviewsConfig",
     "notification.apps.NotificationConfig",
     "phonenumber_field",
+    'corsheaders',
     "rest_framework",
     "django_filters",
     "rest_framework_simplejwt",
@@ -69,6 +70,11 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:5173'
 ]
 
 
