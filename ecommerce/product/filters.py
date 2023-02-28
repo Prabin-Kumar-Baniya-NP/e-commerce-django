@@ -23,7 +23,7 @@ class ProductFilter(BaseFilterBackend):
 
         if category_list is not None:
             for category in category_list:
-                queryset = queryset.filter(category__id=int(category))
+                queryset = queryset.filter(category__name__icontains=category)
 
         if max_price and min_price:
             queryset = queryset.prefetch_related(
