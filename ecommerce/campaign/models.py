@@ -8,7 +8,7 @@ from decimal import Decimal
 class Campaign(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=1024)
-    product = models.ManyToManyField(Product, related_name="product_promotion")
+    product = models.ManyToManyField(Product, related_name="campaign")
     discount = models.DecimalField(
         max_digits=4,
         decimal_places=2,

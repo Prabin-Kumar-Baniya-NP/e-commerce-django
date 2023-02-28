@@ -1,6 +1,8 @@
 from rest_framework.filters import BaseFilterBackend
-from django.db.models import Min, Max, Avg, Count, Prefetch
+from django.db.models import Min, Max, Avg, Prefetch
 from product.models import ProductVariant
+from campaign.models import Campaign
+from django.utils.timezone import now
 
 
 class ProductFilter(BaseFilterBackend):
@@ -18,8 +20,18 @@ class ProductFilter(BaseFilterBackend):
         ordering = request.query_params.get("ordering")
 
         # Apply Filter
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "campaign",
+                queryset=Campaign.objects.filter(
+                    start_datetime__lte=now(),
+                    end_datetime__gte=now(),
+                    is_active=True,
+                ),
+            )
+        )
         if product_name:
-            queryset = queryset.filter(name__icontains = product_name)
+            queryset = queryset.filter(name__icontains=product_name)
 
         if category_list is not None:
             for category in category_list:
