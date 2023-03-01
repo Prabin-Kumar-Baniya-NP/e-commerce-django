@@ -2,7 +2,7 @@ from django.contrib import admin
 from reviews.models import Reviews
 
 
-class CustomReviewAdmin(admin.ModelAdmin):
+class ReviewAdmin(admin.ModelAdmin):
     fields = ["user", "product", "rating", "comment", "image", "is_approved"]
     list_display = ["user", "product", "rating", "is_approved"]
     list_filter = ["rating", "is_approved"]
@@ -14,4 +14,4 @@ class CustomReviewAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Reviews, CustomReviewAdmin)
+admin.site.register(Reviews, ReviewAdmin)

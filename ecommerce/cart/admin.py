@@ -8,9 +8,10 @@ class CartItemInline(admin.TabularInline):
     fields = ["variant", "campaign", "quantity"]
 
 
-class CustomCartAdmin(admin.ModelAdmin):
+class CartAdmin(admin.ModelAdmin):
     list_display = ["user"]
     inlines = [CartItemInline]
+    search_fields = ["user__first_name", "user__middle_name", "user__last_name"]
 
 
-admin.site.register(Cart, CustomCartAdmin)
+admin.site.register(Cart, CartAdmin)

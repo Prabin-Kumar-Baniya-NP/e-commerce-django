@@ -31,6 +31,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_filter = ["status"]
+    search_fields = ["id", "user__first_name", "user__middle_name", "user__last_name"]
     inlines = [OrderItemInline, PaymentInline]
     readonly_fields = [
         "id",

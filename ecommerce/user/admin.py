@@ -14,7 +14,7 @@ class OTPInline(admin.TabularInline):
     fields = ["id", "user", "count", "datetime"]
 
 
-class CustomUserAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     fields = (
         ("first_name", "middle_name", "last_name"),
         ("date_of_birth", "gender"),
@@ -26,7 +26,10 @@ class CustomUserAdmin(admin.ModelAdmin):
         ("is_superuser"),
     )
     inlines = [AddressInline, OTPInline]
+    list_display = ["first_name", "middle_name", "last_name"]
+    list_filter = ["is_email_verified", "is_phone_number_verified"]
+    search_fields = ["first_name", "middle_name", "last_name", "email", "phone_number"]
 
 
-admin.site.register(User, CustomUserAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Address)

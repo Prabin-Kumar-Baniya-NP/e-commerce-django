@@ -47,9 +47,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=1, choices=GENDER_CHOICES
     )
     email = models.EmailField(max_length=254, unique=True)
-    is_email_verified = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField("Email Verified", default=False)
     phone_number = PhoneNumberField(unique=True, null=True, blank=True)
-    is_phone_number_verified = models.BooleanField(default=False)
+    is_phone_number_verified = models.BooleanField("Phone Number Verified", default=False)
     image = models.ImageField(upload_to="profileImage/", null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)

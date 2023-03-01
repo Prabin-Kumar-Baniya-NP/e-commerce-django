@@ -7,12 +7,18 @@ class ProductVariantInline(admin.TabularInline):
     fk_name = "product"
 
 
-class CustomProductAdmin(admin.ModelAdmin):
+class ProductAttributeAdmin(admin.ModelAdmin):
+    list_display = ["name", "value"]
+    search_fields = ["name"]
+    list_filter = ["name"]
+
+
+class ProductAdmin(admin.ModelAdmin):
     list_display = ["name", "is_active"]
     search_fields = ["name"]
     list_filter = ["category"]
     inlines = [ProductVariantInline]
 
 
-admin.site.register(ProductAttribute)
-admin.site.register(Product, CustomProductAdmin)
+admin.site.register(ProductAttribute, ProductAttributeAdmin)
+admin.site.register(Product, ProductAdmin)
