@@ -47,7 +47,7 @@ class ProductVariant(models.Model):
     currency = models.CharField(max_length=3, default="USD", choices=(("USD", "USD"),))
     image = models.ImageField(upload_to="productImage/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    is_default = models.BooleanField(default=True)
+    is_default = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
