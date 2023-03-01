@@ -4,7 +4,7 @@ from user.models import User, OTP
 from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
-from notification.utils import notify_by_email, notify_by_sms
+from notification.tasks import notify_by_email, notify_by_sms
 
 
 class OTPHandler:
@@ -49,15 +49,15 @@ class OTPHandler:
 def send_email_verification_otp(otp, email):
     subject = "OTP For Email Verification"
     message = f"Your OTP for email verification is {otp}. Please do not share this OTP with anyone."
-    return notify_by_email(subject, message, email)
+    notify_by_email.delay(subject, message, email)
 
 
 def send_phone_number_verification_otp(otp, phone_number):
     message = f"Your OTP for phone number verification is {otp}. Please do not share this OTP with anyone."
-    return notify_by_sms(message, phone_number)
+    notify_by_sms.delay(message, phone_number)
 
 
 def send_password_reset_otp(otp, email):
     subject = "OTP For Password Reset"
     message = f"Your OTP for password reset is {otp}. Please do not share this OTP with anyone."
-    return notify_by_email(subject, message, email)
+    notify_by_email.delay(subject, message, email)

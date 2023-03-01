@@ -52,12 +52,13 @@ INSTALLED_APPS = [
     "reviews.apps.ReviewsConfig",
     "notification.apps.NotificationConfig",
     "phonenumber_field",
-    'corsheaders',
+    "corsheaders",
     "rest_framework",
     "django_filters",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "debug_toolbar",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -70,12 +71,10 @@ MIDDLEWARE = [
     "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:5173'
-]
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173"]
 
 
 INTERNAL_IPS = [
@@ -210,7 +209,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 
 OTP_LIFETIME = 5  # provide in minutes
 
@@ -221,3 +220,34 @@ TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER")
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 
 STRIPE_WEBHOOK_SIGNING_SECRET_KEY = env("STRIPE_WEBHOOK_SIGNING_SECRET_KEY")
+
+# CELERY Configuration
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
+
+REDIS_DB = {
+    "USERNAME": env("REDIS_USERNAME"),
+    "PASSWORD": env("REDIS_PASSWORD"),
+    "HOST_URL": env("REDIS_HOST_URL"),
+}
+
+CELERY_BROKER_URL = (
+    f'redis://{REDIS_DB["USERNAME"]}:{REDIS_DB["PASSWORD"]}@{REDIS_DB["HOST_URL"]}/0'
+)
+
+CELERY_TIMEZONE = "Asia/Kathmandu"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_RESULT_BACKEND = "django-db"
+
+# Run this command to start celery: celery -A ecommerce worker -l INFO
+
+
+# EMAIL Configuration
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
