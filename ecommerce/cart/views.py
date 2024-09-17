@@ -16,7 +16,7 @@ class CartViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_cart_object(self):
-        cart, created = Cart.objects.get_or_create(user=self.request.user)
+        cart, created = Cart.objects.prefetch_related("item").get_or_create(user=self.request.user)
         return cart
 
     @action(methods=["GET"], detail=False, url_path="get", url_name="get")
@@ -54,4 +54,5 @@ class CartItemViewSet(viewsets.ModelViewSet):
         return CartItem.objects.get(id=self.kwargs["pk"], cart=self.request.user.cart)
 
     def get_queryset(self):
-        return CartItem.objects.filter(cart=self.request.user.cart)
+        cart = Cart.objects.get(user_id = self.request.user.id)
+        return CartItem.objects.filter(cart_id = cart.id)

@@ -12,12 +12,15 @@ class ProductFilter(BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
         # Get Query Parameters
+        variant_list = request.query_params.getlist("variant")
         product_name = request.query_params.get("name")
         category_list = request.query_params.getlist("category")
         min_avg_rating = request.query_params.get("min_avg_rating")
         max_price = request.query_params.get("max_price")
         min_price = request.query_params.get("min_price")
         ordering = request.query_params.get("ordering")
+
+        variant_qs = ProductVariant.objects.all()
 
         # Apply Filter
         queryset = queryset.prefetch_related(
@@ -30,10 +33,14 @@ class ProductFilter(BaseFilterBackend):
                 ),
             )
         )
+        if variant_list:
+            variant_qs = variant_qs.filter(id__in=variant_list)
+            queryset = queryset.filter(variant__id__in = variant_list)
+        
         if product_name:
             queryset = queryset.filter(name__icontains=product_name)
 
-        if category_list is not None:
+        if category_list:
             for category in category_list:
                 queryset = queryset.filter(category__name__icontains=category)
 
@@ -41,7 +48,7 @@ class ProductFilter(BaseFilterBackend):
             queryset = queryset.prefetch_related(
                 Prefetch(
                     "variant",
-                    queryset=ProductVariant.objects.filter(
+                    queryset=variant_qs.filter(
                         price__gte=min_price, price__lte=max_price
                     ).order_by("-price" if ordering == "price_desc" else "price"),
                 )
@@ -50,7 +57,7 @@ class ProductFilter(BaseFilterBackend):
             queryset = queryset.prefetch_related(
                 Prefetch(
                     "variant",
-                    queryset=ProductVariant.objects.filter(
+                    queryset=variant_qs.filter(
                         price__lte=max_price
                     ).order_by("-price"),
                 )
@@ -59,7 +66,7 @@ class ProductFilter(BaseFilterBackend):
             queryset = queryset.prefetch_related(
                 Prefetch(
                     "variant",
-                    queryset=ProductVariant.objects.filter(
+                    queryset=variant_qs.filter(
                         price__gte=min_price
                     ).order_by("price"),
                 )
@@ -68,7 +75,7 @@ class ProductFilter(BaseFilterBackend):
             queryset = queryset.prefetch_related(
                 Prefetch(
                     "variant",
-                    queryset=ProductVariant.objects.all().order_by(
+                    queryset=variant_qs.order_by(
                         "-price" if ordering == "price_desc" else "price"
                     ),
                 )
