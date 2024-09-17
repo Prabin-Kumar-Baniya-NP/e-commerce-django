@@ -8,11 +8,13 @@ from notification.tasks import notify_by_email, notify_by_sms
 
 
 class OTPHandler:
-    def __init__(self, user_id, timeout, otp_for):
+    def __init__(self, user_id, timeout, otp_delivery_mode, email = None, phone_number = None):
+        self.email = email
+        self.phone_number = phone_number
         self.user = User.objects.get(id=user_id)
         self.timeout = timeout
-        self.otp, self.otp_status = OTP.objects.get_or_create(user=self.user)
-        self.otp_for = otp_for
+        self.otp_delivery_mode = otp_delivery_mode
+        self.otp, self.otp_status = OTP.objects.get_or_create(user_id=user_id, email=email, phone_number=phone_number)
         self.hotp = pyotp.HOTP(
             s=self.get_secret_key_base32_encoded(),
             digits=6,
@@ -43,7 +45,7 @@ class OTPHandler:
         return bytes(self.get_secret_key(), "utf-8")
 
     def get_secret_key(self):
-        return f"{settings.SECRET_KEY}{self.otp_for}{self.user.pk}{self.user.password}{self.user.email}{self.user.is_email_verified}{self.user.phone_number}{self.user.is_phone_number_verified}{self.user.last_login}"
+        return f"{settings.SECRET_KEY}{self.otp_delivery_mode}{self.user.pk}{self.user.password}{self.user.email}{self.user.is_email_verified}{self.user.phone_number}{self.email}{self.phone_number}{self.user.is_phone_number_verified}{self.user.last_login}"
 
 
 def send_email_verification_otp(otp, email):

@@ -120,7 +120,9 @@ class Address(models.Model):
 
 
 class OTP(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="otp")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp")
+    email = models.EmailField(null=True, blank=True)
+    phone_number = PhoneNumberField(null=True, blank=True)
     count = models.PositiveIntegerField(default=0)
     datetime = models.DateTimeField(auto_now=True)
 

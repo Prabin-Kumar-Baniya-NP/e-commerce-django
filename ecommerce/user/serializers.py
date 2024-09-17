@@ -29,7 +29,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError("Password mismatch")
+            raise serializers.ValidationError({"password2": ["Password mismatch"]})
         return super().validate(attrs)
 
     def create(self, validated_data):

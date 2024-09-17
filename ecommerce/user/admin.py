@@ -10,8 +10,8 @@ class AddressInline(admin.TabularInline):
 class OTPInline(admin.TabularInline):
     model = OTP
     fk_name = "user"
-    readonly_fields = ["datetime"]
-    fields = ["id", "user", "count", "datetime"]
+    readonly_fields = ["datetime", "email", "phone_number", 'count']
+    fields = ["id", "user", "email", "phone_number", "count", "datetime"]
 
 
 class UserAdmin(admin.ModelAdmin):

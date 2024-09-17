@@ -161,8 +161,11 @@ def verify_email(request):
     """
     Sends and verifies email through OTP
     """
-    otp = OTPHandler(request.user.id, settings.OTP_LIFETIME, "email")
-
+    if not request.user.email:
+        raise PermissionDenied("Email not found")
+    
+    otp = OTPHandler(request.user.id, settings.OTP_LIFETIME, "email", email=request.user.email)
+    
     if request.method == "GET":
         if not request.user.is_email_verified:
             otp = otp.generate_otp()
@@ -231,7 +234,10 @@ def verify_number(request):
     """
     Sends and verifies phone number through OTP
     """
-    otp = OTPHandler(request.user.id, settings.OTP_LIFETIME, "phone_number")
+    if not request.user.phone_number:
+        return PermissionDenied("Phone Number Not Found")
+
+    otp = OTPHandler(request.user.id, settings.OTP_LIFETIME, "phone_number", phone_number=request.user.phone_number.as_e164)
 
     if request.method == "GET":
         if request.user.phone_number:
@@ -430,6 +436,8 @@ def update_address(request, id):
 
     serializer.is_valid(raise_exception=True)
     serializer.save(user=request.user)
+    if serializer.data["is_default"]:
+        Address.objects.filter(user=request.user).exclude(id=id).update(is_default=False)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
