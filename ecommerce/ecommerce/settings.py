@@ -191,7 +191,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-TIME_ZONE = "Asia/Kathmandu"
+TIME_ZONE = "Asia/Kolkata"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -208,14 +208,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-
-
 OTP_LIFETIME = 5  # provide in minutes
 
-TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")
-TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER")
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID", default=None)
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN", default=None)
+TWILIO_PHONE_NUMBER = env("TWILIO_PHONE_NUMBER", default=None)
 
 STRIPE_SECRET_KEY = env("STRIPE_SECRET_KEY")
 
@@ -224,17 +221,9 @@ STRIPE_WEBHOOK_SIGNING_SECRET_KEY = env("STRIPE_WEBHOOK_SIGNING_SECRET_KEY")
 # CELERY Configuration
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecommerce.settings")
 
-REDIS_DB = {
-    "USERNAME": env("REDIS_USERNAME"),
-    "PASSWORD": env("REDIS_PASSWORD"),
-    "HOST_URL": env("REDIS_HOST_URL"),
-}
-
-CELERY_BROKER_URL = (
-    f'redis://{REDIS_DB["USERNAME"]}:{REDIS_DB["PASSWORD"]}@{REDIS_DB["HOST_URL"]}/0'
-)
-
-CELERY_TIMEZONE = "Asia/Kathmandu"
+# CELERY Configuration
+CELERY_BROKER_URL = env("REDIS_URL")
+CELERY_TIMEZONE = "Asia/Kolkata"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
@@ -250,4 +239,4 @@ EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

@@ -23,6 +23,9 @@ class PaymentViewSet(viewsets.ModelViewSet):
     http_method_names = ["get"]
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return super().get_queryset().filter(order__user__id=self.request.user.id).order_by("-id")
+
 
 class PaymentStatusViewSet(viewsets.ViewSet):
     """

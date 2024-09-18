@@ -89,5 +89,4 @@ class OrderWriteSerializer(serializers.ModelSerializer):
                 for item in cart_item_list
             ]
             OrderItem.objects.bulk_create(order_item_list)
-            CartItem.objects.filter(cart=cart).delete()
         return order

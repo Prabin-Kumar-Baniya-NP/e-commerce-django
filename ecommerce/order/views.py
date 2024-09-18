@@ -22,7 +22,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def get_queryset(self):
-        return super().get_queryset().filter(user=self.request.user)
+        return super().get_queryset().filter(user=self.request.user).order_by("-id")
 
     def create(self, request, *args, **kwargs):
         serializer = OrderWriteSerializer(
